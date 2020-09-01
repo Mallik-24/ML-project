@@ -16,7 +16,7 @@ def get_location_names():
 def predict_home_price():
     total_sqft = float(request.form['total_sqft'])
     location = request.form['location']
-    bhk = int(request.form['bhk'])
+    bhk = int(request.form['bhk']) 
     bath = int(request.form['bath'])
 
     response = jsonify({
