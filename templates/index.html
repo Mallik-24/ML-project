@@ -34,9 +34,11 @@
       <div class="form-group">
             <label for="location">location</label>
             <select class="form-control" name ='location' >
+              {% if price is defined %}
                 {% for i in locations %} 
                     <option>{{i}}</option>
                 {% endfor %} 
+              {% endif %}
             </select>
           </div>
       <input class="btn btn-primary" type="submit" value="submit">
