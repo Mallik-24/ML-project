@@ -1,55 +1,56 @@
 <!DOCTYPE html>
 <html>
-  <head>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
-  </head>
 
-  <body>
-     <h1>House Price Predictions</h1>
-    <form method="POST" action = "/send">
-      <div class = "form-group">
-        <label for="area">Area(sq_ft)</label>
-        <input type="text" name = "area" placeholder="1000">
-      </div>
-      <div class="form-group">
-        <label for="bhk">bhk</label>
-        <select class="form-control" name ='bhk' >
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+</head>
+
+<body>
+    <h1>House Price Predictions</h1>
+    <form method="POST" action="/send">
+        <div class="form-group">
+            <label for="area">Area(sq_ft)</label>
+            <input type="text" name="area" placeholder="1000">
+        </div>
+        <div class="form-group">
+            <label for="bhk">bhk</label>
+            <select class="form-control" name='bhk'>
           <option>1</option>
           <option>2</option>
           <option>3</option>
           <option>4</option>
           <option>5</option>
         </select>
-      </div>
-      <div class="form-group">
-        <label for="bath">bath</label>
-        <select class="form-control" name ='bath' >
+        </div>
+        <div class="form-group">
+            <label for="bath">bath</label>
+            <select class="form-control" name='bath'>
           <option>1</option>
           <option>2</option>
           <option>3</option>
           <option>4</option>
           <option>5</option>
         </select>
-      </div>
-      <div class="form-group">
+        </div>
+        <div class="form-group">
             <label for="location">location</label>
-            <select class="form-control" name ='location' >
-              {% if price is defined %}
+            <select class="form-control" name='location'>
+              
                 {% for i in locations %} 
                     <option>{{i}}</option>
                 {% endfor %} 
-              {% endif %}
+              
             </select>
-          </div>
-      <input class="btn btn-primary" type="submit" value="submit">
+        </div>
+        <input class="btn btn-primary" type="submit" value="submit">
     </form>
 
     {% if price is defined %}
-        <h1>estimated price = {{ price }} </h1> 
+    <h1>estimated price = {{ price }} </h1>
     {% endif %}
-    
-    
 
-  </body>
+
+
+</body>
 
 </html>
