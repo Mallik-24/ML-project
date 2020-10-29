@@ -1,5 +1,5 @@
 # House-Price-Prediction-Model
-Machine learning model to predict house prices in Bangalore  deployed using flask server
+MACHINE LEARNING model to predict house prices in BANGLORE deployed using flask server
 
 
 ## How to run
