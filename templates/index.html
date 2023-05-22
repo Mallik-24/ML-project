@@ -2,53 +2,1165 @@
 <html>
 
 <head>
+    <title>Banglore Home Price Prediction</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="/House-Price-Prediction/client/app.js"></script>
+	<link rel="stylesheet" href="/House-Price-Prediction/client/app.css">
+<meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 </head>
+<script>
+    function getBathValue() {
+        var uiBathrooms = document.getElementsByName("uiBathrooms");
+        for (var i in uiBathrooms) {
+          if (uiBathrooms[i].checked) {
+            return parseInt(i) + 1;
+          }
+        }
+        return -1; // Invalid Value
+      }
+      
+      function getBHKValue() {
+        var uiBHK = document.getElementsByName("uiBHK");
+        for (var i in uiBHK) {
+          if (uiBHK[i].checked) {
+            return parseInt(i) + 1;
+          }
+        }
+        return -1; // Invalid Value
+      }
+      
+      function onClickedEstimatePrice() {
+        console.log("Estimate price button clicked");
+        var sqft = document.getElementById("uiSqft");
+        var bhk = getBHKValue();
+        var bathrooms = getBathValue();
+        var location = document.getElementById("uiLocations");
+        var estPrice = document.getElementById("uiEstimatedPrice");
+      
+        var url = "http://127.0.0.1:5000/predict_home_price"; // Use this if you are NOT using nginx which is first 7 tutorials
+        //var url = "/api/predict_home_price"; // Use this if  you are using nginx. i.e tutorial 8 and onwards
+      
+        $.post(
+          url,
+          {
+            total_sqft: parseFloat(sqft.value),
+            bhk: bhk,
+            bath: bathrooms,
+            location: location.value,
+          },
+          function (data, status) {
+            console.log(data.estimated_price);
+            estPrice.innerHTML =
+              "<h2>" + data.estimated_price.toString() + " Lakh</h2>";
+            console.log(status);
+          }
+        );
+      }
+      
+      function onPageLoad() {
+        console.log("document loaded");
+        var url = "http://127.0.0.1:5000/get_location_names"; // Use this if you are NOT using nginx which is first 7 tutorials
+        // var url = "/api/get_location_names"; // Use this if  you are using nginx. i.e tutorial 8 and onwards
+        $.get(url, function (data, status) {
+          console.log("got response for get_location_names request");
+          if (data) {
+            var locations = data.locations;
+            var uiLocations = document.getElementById("uiLocations");
+            $("#uiLocations").empty();
+            for (var i in locations) {
+              var opt = new Option(locations[i]);
+              $("#uiLocations").append(opt);
+            }
+          }
+        });
+      }
+      
+      window.onload = onPageLoad;
+      
+</script>
+<style>
+    body {
+        margin: 0px;
+        font-family: sans-serif;
+        font-size: 30px;
+    }
+    
+    #body-header {
+        height: 65vh;
+        background-image: url(../client/image/WTC.jpg);
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        padding-top: 1.2rem;
+    }
+    
+    .horizontal-list {
+        list-style: none;
+        padding-left: 0px;
+        margin: 0px;
+    }
+    
+    .horizontal-list li {
+        display: inline-block;
+        margin: 0px 8px 8px 0px;
+        font-weight: bold;
+        font-size: 1.5rem;
+    }
+    
+    .horizontal-list li a {
+        color: white;
+        text-decoration: none;
+    }
+    
+    .nav-menu li a {
+        transition: color 0.5s, border-bottom 4s;
+    }
+    
+    .nav-menu li a:hover {
+        color: lightgreen;
+        border-bottom: 1px solid white;
+    }
+    
+    .text-center {
+        text-align: center;
+    }
+    
+    #name-social-container {
+        margin-top: 20vh;
+    }
+    
+    #contact {
+        background-color: #0abcf9;
+        /* background-image: linear-gradient(50deg, #2857a4 0%, #403066 74%);  */
+        background-image: url(/House-Price-Prediction/client/image/contact.jpg);
+        background-image: url(/House-Price-Prediction/client/image/contact.jpg), linear-gradient(50deg, #2857a4 0%, #403066 74%);
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        color: white;
+        padding-bottom: 40px;
+    }
+    
+    #contact h1, #contact h1 span {
+        color: white;
+    }
+    
+    #contact-form {
+        margin-left: 20%;
+    }
+    
+    #contact-container {
+        display: flex;
+    }
+    
+    #my-name {
+        font-size: 3rem;
+        letter-spacing: 0.1rem;
+        color: greenyellow;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    
+    .social-icons li a img {
+        padding: 10px;
+        font-size: 1rem;
+        border-radius: 50%;
+    }
+    
+    .social-icons li a img:hover {
+        box-shadow: 0px 0px 6px 4px blueviolet;
+    }
+    
+    /* about section */
+    
+    #about {
+        height: auto;
+        width: 100%;
+        position: relative;
+    }
+    
+    #my-image {
+        height: 12rem;
+        width: 12rem;
+        margin: auto;
+        margin-top: -17vh;
+    }
+    
+    #my-image img {
+        height: 100%;
+        width: 100%;
+        border-radius: 50%;
+        border: 3px solid white;
+        box-shadow: 1px 1px 10px 2px lightgray;
+    }
+    
+    #about-para {
+        padding: 10px;
+        width: 70%;
+        text-align: justify;
+        color: grey;
+        line-height: 28px;
+        font-size: 1.1rem;
+        margin: auto;
+    }
+    
+    section {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    section:nth-child(2n) {
+        background-color: #9e9b9b29;
+    }
+    
+    section:nth-child(2n+1) {
+        background-color: white;
+    }
+    
+    .section-heading {
+        width: auto;
+        padding: 20px 10px 10px;
+        font-weight: 400;
+    }
+    
+    .section-heading span {
+        font-size: 40px;
+        color: #2857a4;
+        display: inline-block;
+        padding-top: 10px;
+        margin-right: 0, 5rem;
+    }
+    
+    .skills-display {
+        width: 75%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+        /* padding: 10px; */
+        margin-bottom: 30px;
+    }
+    
+    .skill-progress {
+        height: 2.2rem;
+        width: 11rem;
+        background-color: lightgray;
+        border-radius: 1rem;
+        box-shadow: 1px 1px 2px 1px #b9b9b9 inset;
+        margin: 25px;
+        overflow: hidden;
+    }
+    
+    .skill-name span {
+        color: white;
+        font-size: 1rem;
+        margin-left: 10px;
+        vertical-align: middle;
+    }
+    
+    .skill-progress>div {
+        border-radius: 20px 0px 0px 20px;
+        box-shadow: 1px 1px 5px 2px #989882;
+    }
+    
+    /* common margin classes  */
+    
+    .m0 {
+        margin: 0;
+    }
+    
+    .mb75px {
+        margin-bottom: 75px;
+    }
+    
+    .mb50px {
+        margin-bottom: 50px;
+    }
+    
+    /* common color classes */
+    
+    .text-highlight {
+        color: #2857a4;
+        font-weight: 600;
+    }
+    
+    /* Common Text Align Classes */
+    
+    .text-right {
+        text-align: right;
+    }
+    
+    .text-center {
+        text-align: center;
+    }
+    
+    .text-justify {
+        text-align: justify;
+    }
+    
+    /* setting background color */
+    
+    .m-blue {
+        color: #2857a4;
+    }
+    
+    .mb-blue {
+        background-color: #2857a4;
+    }
+    
+    .mb-orange {
+        background-color: #ec4d1c;
+    }
+    
+    .mb-teal {
+        background-color: #0b8176;
+    }
+    
+    .mb-light-purple {
+        background-color: #93738c;
+    }
+    
+    /* percentage classes */
+    
+    .eighty-five-percent {
+        width: 85%;
+        height: inherit;
+    }
+    
+    .eighty-percent {
+        height: inherit;
+        width: 80%;
+    }
+    
+    .fifty-percent {
+        height: inherit;
+        width: 50%;
+    }
+    
+    /* Portfolio Section */
+    
+    #portfolio-container {
+        box-sizing: border-box;
+        display: flex;
+        flex-wrap: wrap;
+        padding: 0 50px;
+        margin-bottom: 20px;
+        justify-content: space-around;
+    }
+    
+    .portfolio-image-container {
+        max-width: 300px;
+        overflow: hidden;
+        margin: 10px;
+        background-size: cover;
+        background-repeat: no-repeat;
+        position: relative;
+    }
+    
+    .portfolio-image-container img {
+        width: 100%;
+        height: 100%;
+    }
+    
+    .portfolio-details {
+        transition: all 0.5s ease-in-out;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        color: transparent;
+        text-align: center;
+        padding: 10px;
+    }
+    
+    .portfolio-image-container:hover {
+        box-shadow: 0 0 20px #74ADC8;
+    }
+    
+    .portfolio-image-container:hover .portfolio-details {
+        background-color: #80808078;
+        color: white;
+    }
+    
+    /* Contact Form */
+    
+    #contact {
+        background-color: #0abcf9;
+        /* background-image: linear-gradient(50deg, #2857a4 0%, #403066 74%);  */
+        background-image: url(/House-Price-Prediction/client/image/contact.jpg);
+        background-image: url(/House-Price-Prediction/client/image/contact.jpg), linear-gradient(50deg, #2857a4 0%, #403066 74%);
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        color: white;
+        padding-bottom: 40px;
+    }
+    
+    #my-details-container {
+        width: 35%;
+        margin-left: 6%;
+    }
+    
+    #my-details-container p {
+        color: #d9dcdd;
+        font-size: 0.9rem;
+    }
+    
+    .my-details-info-container {
+        margin-bottom: 20px;
+        color: #d9dcdd;
+        font-size: 1rem;
+    }
+    
+    .my-details-info-container span {
+        margin-left: 0.4rem;
+    }
+    
+    .my-details-info-container i {
+        color: white;
+    }
+    
+    .my-details-icon {
+        width: 1rem;
+        height: 1rem;
+        vertical-align: bottom;
+        margin-right: 0.5rem;
+    }
+    
+    /* Work Experience */
+    
+    .timeline {
+        position: relative;
+        width: 75%;
+    }
+    
+    .timeline-box {
+        padding: 5px;
+        width: 40%;
+        min-height: 150px;
+        position: relative;
+        left: 5%;
+        text-align: right;
+    }
+    
+    .timeline-box::after {
+        content: '';
+        position: absolute;
+        width: 15px;
+        height: 15px;
+        background-color: lightgrey;
+        top: 25%;
+        border-radius: 50%;
+        z-index: 1;
+    }
+    
+    .timeline-box:nth-child(2n) {
+        left: 53%;
+    }
+    
+    .timeline-box:nth-child(2n+1)::after {
+        right: -11.8%;
+    }
+    
+    .timeline-box:nth-child(2n)::after {
+        left: -9%;
+    }
+    
+    .timeline-container {
+        padding: 8px;
+    }
+    
+    .timeline-logo {
+        position: absolute;
+        width: 50px;
+        overflow: hidden;
+    }
+    
+    .timeline-logo>img {
+        width: 100%;
+    }
+    
+    #timeline-divider {
+        position: absolute;
+        width: 0;
+        top: 10%;
+        left: 50%;
+        border: 1px dashed #0096fa6b;
+        height: 66%;
+        color: #433E3F;
+    }
+    
+    #timeline-divider .timeline-traveller {
+        position: sticky;
+        top: 135px;
+        z-index: 2;
+    }
+    
+    #timeline-divider i {
+        transform: rotate(90deg);
+        margin-top: -35px;
+        display: block;
+        color: #2857a4;
+    }
+    
+    .experience-designation {
+        font-size: 1.4rem;
+    }
+    
+    .experience-company-name {
+        margin: 5px 0 0;
+        color: #eb822d;
+        font-weight: 400;
+        font-size: 1.2rem;
+    }
+    
+    .experience-duration {
+        color: #9e9b9b;
+        font-weight: 100;
+        color: grey;
+        font-size: 1rem;
+    }
+    
+    .experience-description {
+        font-size: 14px;
+        padding: 2px;
+        color: grey;
+        line-height: 20px;
+    }
+    
+    /* Media quries and Responsicveness */
+    
+    @media only screen and (max-width: 572px) {
+        .timeline-box {
+            width: 100%;
+            left: 10% !important;
+        }
+        .bars {
+            display: block;
+        }
+        .nav-menu {
+            display: none;
+        }
+    }
+    
+    @media only screen and (max-width: 768px) {
+        .timeline-box {
+            width: 90%;
+            left: 10% !important;
+        }
+        .timeline-box::after {
+            left: -9.3% !important;
+        }
+        #timeline-divider {
+            top: 10%;
+            left: 2%;
+        }
+        #contact-form {
+            margin-left: 0%;
+        }
+        #contact-container {
+            flex-wrap: wrap;
+        }
+        #my-details-container {
+            width: 80%;
+            margin: 10%;
+        }
+        #contact-form-container {
+            width: 80%;
+            margin: 10%;
+        }
+    }
+    
+    @import url(https://fonts.googleapis.com/css?family=Roboto:300);
+    .switch-field {
+        display: flex;
+        margin-bottom: 36px;
+        overflow: hidden;
+    }
+    
+    .switch-field input {
+        position: absolute !important;
+        clip: rect(0, 0, 0, 0);
+        height: 1px;
+        width: 1px;
+        border: 0;
+        overflow: hidden;
+    }
+    
+    .switch-field label {
+        background-color: #e4e4e4;
+        color: rgba(0, 0, 0, 0.6);
+        font-size: 14px;
+        line-height: 1;
+        text-align: center;
+        padding: 8px 16px;
+        margin-right: -1px;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+        transition: all 0.1s ease-in-out;
+    }
+    
+    .switch-field label:hover {
+        cursor: pointer;
+    }
+    
+    .switch-field input:checked+label {
+        background-color: #a5dc86;
+        box-shadow: none;
+    }
+    
+    .switch-field label:first-of-type {
+        border-radius: 4px 0 0 4px;
+    }
+    
+    .switch-field label:last-of-type {
+        border-radius: 0 4px 4px 0;
+    }
+    
+    .form {
+        max-width: 270px;
+        font-family: "Lucida Grande", Tahoma, Verdana, sans-serif;
+        font-weight: normal;
+        line-height: 1.625;
+        margin: 8px auto;
+        padding-left: 16px;
+        z-index: 2;
+    }
+    
+    h2 {
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+    
+    .area {
+        font-family: "Roboto", sans-serif;
+        outline: 0;
+        background: #f2f2f2;
+        width: 76%;
+        border: 0;
+        margin: 0 0 10px;
+        padding: 10px;
+        box-sizing: border-box;
+        font-size: 15px;
+        height: 35px;
+        border-radius: 5px;
+    }
+    
+    .location {
+        font-family: "Roboto", sans-serif;
+        outline: 0;
+        background: #f2f2f2;
+        width: 76%;
+        border: 0;
+        margin: 0 0 10px;
+        padding: 10px;
+        box-sizing: border-box;
+        font-size: 15px;
+        height: 40px;
+        border-radius: 5px;
+    }
+    
+    .submit {
+        background: #a5dc86;
+        width: 76%;
+        border: 0;
+        margin: 25px 0 10px;
+        box-sizing: border-box;
+        font-size: 15px;
+        height: 35px;
+        text-align: center;
+        border-radius: 5px;
+    }
+    
+    .result {
+        background: ghostwhite;
+        width: 76%;
+        border: 0;
+        margin: 25px 0 10px;
+        box-sizing: border-box;
+        font-size: 15px;
+        height: 35px;
+        text-align: center;
+    }
+    
+    #contact {
+        height: auto;
+        width: 100%;
+        position: relative;
+    }
+    
+    .image023 {
+        /* background: url('https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'); */
+        background-repeat: ;
+        background-size: auto;
+        background-size: 100% 100%;
+        -webkit-filter: blur(5px);
+        -moz-filter: blur(5px);
+        -o-filter: blur(5px);
+        -ms-filter: blur(5px);
+        filter: blur(15px);
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        body, html {
+            height: 100%;
+        }
+        .pridection{
+            width: 50%;
+        }
+        #fill-form {
+            background-color: #0abcf9;
+            /* background-image: linear-gradient(50deg, #2857a4 0%, #403066 74%);  */
+            /* background-image: url(../image/contact.jpg);
+        background-image: url(../image/contact.jpg), linear-gradient(50deg, #2857a4 0%, #403066 74%); */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            padding-bottom: 40px;
+        }
+</style>
 
 <body>
-    <h1>House Price Predictions</h1>
-    <form method="POST" action="/send">
-        <div class="form-group">
-            <label for="area">Area(sq_ft)</label>
-            <input type="text" name="area" placeholder="1000">
-        </div>
-        <div class="form-group">
-            <label for="bhk">bhk</label>
-            <select class="form-control" name='bhk'>
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>4</option>
-          <option>5</option>
-        </select>
-        </div>
-        <div class="form-group">
-            <label for="bath">bath</label>
-            <select class="form-control" name='bath'>
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>4</option>
-          <option>5</option>
-        </select>
-        </div>
-        <div class="form-group">
-            <label for="location">location</label>
-            <select class="form-control" name='location'>
-              
-                {% for i in locations %} 
-                    <option>{{i}}</option>
-                {% endfor %} 
-              
-            </select>
-        </div>
-        <input class="btn btn-primary" type="submit" value="submit">
-    </form>
-
-    {% if price is defined %}
-    <h1>estimated price = {{ price }} </h1>
-    {% endif %}
-
+    <body>
+        <header id="body-header">
+            <nav>
+              <ul class="horizontal-list text-center nav-menu">
+                <li>
+                  <a href="#">HOME </a>
+                </li>
+      
+                <li>
+                  <a href="#about">ABOUT </a>
+                </li>
+                <li>
+                  <a href="#skills"> TECHNOLOGY USED </a>
+                </li>
+      
+                <li>
+                  <a href="#experience">TEAM MEMBERS </a>
+                </li>
+                
+                <li>
+                  <a href="#education">PROJECT OVERVIEW</a>
+                </li>
+      
+                <li>
+                  <a href="#portfolio">BENGALURU</a>
+                </li>
+      
+                     <li>
+                  <a href="#contact">PREDICT PRICE </a>
+                </li>
+              </ul>
+            </nav>
+      
+            <!-- Adding Name -->
+      
+            <div id="name-social-container">
+              <div class="text-center">
+                <h1 id="my-name">
+                  Bengaluru House Price Prediction
+                </h1>
+              </div>
+            </div>
+      
+            <div>
+              <ul class="social-icons horizontal-list text-center">
+                <li>
+                  <a href="#">
+                    <!-- <img src="image/github-48.png" alt="Github" /> -->
+                  </a>
+                </li>
+      
+                <li>
+                  <a href="#">
+                    <!-- <img src="image/linkedin-48.png" alt="Linkedin" /> -->
+                  </a>
+                </li>
+      
+                <li>
+                  <a href="#">
+      
+                    <!-- <img src="image/quora-48.png" alt="Quora" /> -->
+                  </a>
+                </li>
+      
+                <li>
+                  <a href="#">
+                    <!-- <img src="image/stack-overflow-48.png" alt="stack-overflow" /> -->
+                  </a>
+                </li>
+      
+                <li>
+                  <a href="#">
+                    <!-- <img src="image/twitter-48.png" alt="twitter" /> -->
+                  </a>
+                </li>
+      
+                <li>
+                  <a href="#">
+                    <!-- <img src="image/dev-post-48.png" alt="DEv" /> -->
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </header>
+      
+          <main>
+            <!-- About section starts -->
+            <section id="about">
+              <div id="my-image">
+                <img src="/House-Price-Prediction/client/image/me.jpg" alt="My pic" />
+              </div>
+              <div id="about-para">
+                <p>
+                Bangalore, one of the hotspots for real estate development, has seen an increase in demand from potential
+      home buyers and investors, and is expected to witness a further boom in the sector by 2020.Now with the lingering impact of <span class="text-highlight"> demonetization and COVID-19, </span> the enforcement of the <span class="text-highlight">  Real Estate
+      (Regulation and Development) Act (RERA),</span> and the lack of trust in property developers in the city,
+      housing units sold across India in 2019 dropped by 3 percent. 
+      <br>
+      <p>
+      Buying a home, especially in a city like Bengaluru, is a tricky choice. While the major factors are usually
+      the same for all metros, there are others to be considered for the Silicon Valley of India. With its help
+      millennial crowd, vibrant culture, great climate and a slew of job opportunities, it is difficult to ascertain
+      the price of a house in Bengaluru. 
+      <br> <p>
+      Bangalore Housing dataset proves that many other factors influence the final price of homes. 
+                  
+                </p>
+              </div>
+            </section>
+      
+            <section id="skills">
+              <!-- To display the heading of the seciton. For the section heading
+              we have h1 this h1 has class section-heading and a margin border mb75px 
+            i.e section heading for basic styling and mb75px for margin  -->
+              <h1 class="section-heading mb75px">
+                <span>
+                  <!-- the span is for the icons which is by using font-awsome -->
+                  <i class="fas fa-chalkboard-teacher"></i>
+                </span>
+                <span>Technology Used</span>
+              </h1>
+      
+              <div class="skills-display">
+                <!-- this will be the container div which will have individaul div. -->
+      
+                <!-- adding one particular div -->
+                <div class="skill-progress">
+                  <!-- For the percentage indicator we will create another div
+                  which will have the indicator of color like blue orange, yellow etc -->
+                  <div class="eighty-five-percent mb-blue">
+                    <!-- where 85 % is the percentage and mb-blue is the color setup -->
+                    <!-- within that we will create name of the skill which is also a div -->
+                    <div class="skill-name">
+                      <span>Python</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- another skill -->
+                <div class="skill-progress">
+                  <div class="eighty-five-percent mb-orange">
+                    <div class="skill-name">
+                      <span> HTML </span>
+                    </div>
+                  </div>
+                </div>
+      
+                <!-- another skill -->
+      
+                <div class="skill-progress">
+                  <div class="eighty-percent mb-light-purple">
+                    <div class="skill-name">
+                      <span> CSS </span>
+                    </div>
+                  </div>
+                </div>
+      
+                <!-- another skill -->
+                <div class="skill-progress">
+                  <div class="fifty-percent mb-teal">
+                    <div class="skill-name">
+                      <span> Javascript </span>
+                    </div>
+                  </div>
+                </div>
+      
+                <!-- another skill -->
+                <div class="skill-progress">
+                  <div class="fifty-percent mb-blue">
+                    <div class="skill-name">
+                      <span> git </span>
+                    </div>
+                  </div>
+                </div>
+                <!-- another skill -->
+                <div class="skill-progress">
+                  <div class="fifty-percent mb-blue">
+                    <div class="skill-name">
+                      <span> Linux </span>
+                    </div>
+                  </div>
+                </div>
+                <!-- another skill -->
+                <div class="skill-progress">
+                  <div class="eighty-percent mb-light-purple">
+                    <div class="skill-name">
+                      <span> Github </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <!-- Work expreience starts and adds icons -->
+            <section id="experience">
+              <h1 class="section-heading mb75px">
+                <span>
+                  <i class="fas fa-briefcase"></i>
+                </span>
+                <span>Team Members</span>
+              </h1>
+      
+              <!-- building timeline -->
+              <div class="timeline">
+                <div class="timeline-box">
+                  <div class="timeline-container">
+                    <div class="timeline-logo">
+                      <!-- <img
+                        src="https://ninjasfiles.s3.amazonaws.com/asset_0000000000000030_1550710829_ninjasicon.png"
+                      /> -->
+                    </div>
+                    <h3 class="experience-designation m0 m-blue">Akshay Kumar A</h3>
+                    <h4 class="experience-company-name">1JV16CS001</h4>
+                    <h5 class="experience-duration m0">8th Sem CSE</h5>
+      
+                   <!-- <p class="experience-description text-justify">
+                      Lorem Ipsum is simply dummy text of the printing and typesetting
+                      industry. Lorem Ipsum has been the industry's standard dummy
+                      text ever since the 1500s, when an unknown printer took a galley
+                      of type and scrambled it to make a type specimen book.
+                    </p> -->
+                  </div>
+                </div>
+      
+                <div class="timeline-box right">
+                  <div class="timeline-container">
+                    <div class="timeline-logo">
+                      <!-- <img
+                        src="https://ninjasfiles.s3.amazonaws.com/asset_0000000000000030_1550710829_ninjasicon.png"
+                      /> -->
+                    </div>
+                    <h3 class="experience-designation m0 m-blue">Nishant Gautam</h3>
+                    <h4 class="experience-company-name">1JV16CS023</h4>
+                    <h5 class="experience-duration m0">8th Sem CSE</h5>
+                   <!-- <p class="experience-description text-justify">
+                      Lorem Ipsum is simply dummy text of the printing and typesetting
+                      industry. Lorem Ipsum has been the industry's standard dummy
+                      text ever since the 1500s, when an unknown printer took a galley
+                      of type and scrambled it to make a type specimen book.
+                    </p>-->
+                  </div>
+                </div>
+      
+                <div class="timeline-box left">
+                  <div class="timeline-container">
+                    <div class="timeline-logo">
+                      <!-- <img
+                        src="https://ninjasfiles.s3.amazonaws.com/asset_0000000000000030_1550710829_ninjasicon.png"
+                      /> -->
+                    </div>
+                    <h3 class="experience-designation m0 m-blue">Roshan Bist</h3>
+                    <h4 class="experience-company-name">1JV16CS033</h4>
+                    <h5 class="experience-duration m0">8th Sem CSE</h5>
+                   <!-- <p class="experience-description text-justify">
+                      Lorem Ipsum is simply dummy text of the printing and typesetting
+                      industry. Lorem Ipsum has been the industry's standard dummy
+                      text ever since the 1500s, when an unknown printer took a galley
+                      of type and scrambled it to make a type specimen book.
+                    </p>-->
+                  </div>
+                </div>
+      
+                 <div class="timeline-box right">
+                  <div class="timeline-container">
+                    <div class="timeline-logo">
+                      <!-- <img
+                        src="https://ninjasfiles.s3.amazonaws.com/asset_0000000000000030_1550710829_ninjasicon.png"
+                      /> -->
+                    </div>
+                    <h3 class="experience-designation m0 m-blue">Manoj K R</h3>
+                    <h4 class="experience-company-name">1JV16CS018</h4>
+                    <h5 class="experience-duration m0">8th Sem CSE</h5>
+                   <!-- <p class="experience-description text-justify">
+                      Lorem Ipsum is simply dummy text of the printing and typesetting
+                      industry. Lorem Ipsum has been the industry's standard dummy
+                      text ever since the 1500s, when an unknown printer took a galley
+                      of type and scrambled it to make a type specimen book.
+                    </p>-->
+                  </div>
+                </div>
+      
+      
+                <div id="timeline-divider">
+                  <div class="timeline-traveller">
+                    <div>
+                      <i class="fas fa-plane"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+      
+      
+      
+            <section id="portfolio">
+              <h1 class="section-heading mb75px">
+                <span>
+                  <i class="fas fa-th-list"></i>
+                </span>
+                <span> BENGALURU </span>
+              </h1>
+      
+              <div id="portfolio-container">
+                <!-- 1st portfolio  -->
+                <div class="portfolio-image-container">
+                  <img
+                    src="/House-Price-Prediction/client/image/whitefield.jpg"
+                  />
+                  <div class="portfolio-details">
+                    <p>
+                      Whitefield neighborhood of Bangalore
+                    </p>
+                  </div>
+                </div>
+      
+                <!-- 2nd portfolio -->
+                <div class="portfolio-image-container">
+                  <img
+                    src="../client/image/residental.jpg"
+                  />
+                  <div class="portfolio-details">
+                    <p>
+                      Bangalore resident District High
+                    </p>
+                  </div>
+                </div>
+      
+                <!-- 3rd portfolio    -->
+                <div class="portfolio-image-container">
+                  <img
+                    src="/House-Price-Prediction/client/image/urban.jpg"
+                  />
+                  <div class="portfolio-details">
+                    <p>
+                     Urban City Sky line
+                    </p>
+                  </div>
+                </div>
+      
+                <!-- 4th portfolio     -->
+                <div class="portfolio-image-container">
+                  <img
+                    src="/House-Price-Prediction/client/image/mall.jpg"
+                  />
+                  <div class="portfolio-details">
+                    <p>
+                      Apartment near Orion malls.
+                    </p>
+                  </div>
+                </div>
+      
+                <!-- 5th portfolio -->
+                <div class="portfolio-image-container">
+                  <img
+                    src="/House-Price-Prediction/client/image/houses.jpg"/>
+                  <div class="portfolio-details">
+                    <p>
+                    Houses  for Sale
+                    </p>
+                  </div>
+                </div>
+      
+                <!-- 6th portfolio -->
+                <div class="portfolio-image-container">
+                  <img
+                    src="/House-Price-Prediction/client/image/under construction.jpg"
+                  />
+                  <div class="portfolio-details">
+                    <p>
+                      Under Construction Apartments
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <!-- contact section -->
+            <section id="contact">
+              <h1 class="section-heading mb50px">
+                <span>
+                  <i class="far fa-address-card"></i>
+                </span>
+                <span> Predict Price </span>
+              </h1>
+      
+        <div class="image023"></div>
+            </section>
+          </main>
+          <section class="pridection">
+            <h1>House Price Predictions</h1>
+            <form method="POST" action="/send">
+                <div class="form-group">
+                    <label for="area">Area(sq_ft)</label>
+                    <input type="text" name="area" placeholder="1000">
+                </div>
+                <div class="form-group">
+                    <label for="bhk">bhk</label>
+                    <select class="form-control" name='bhk'>
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                </select>
+                </div>
+                <div class="form-group">
+                    <label for="bath">bath</label>
+                    <select class="form-control" name='bath'>
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                </select>
+                </div>
+                <div class="form-group">
+                    <label for="location">location</label>
+                    <select class="form-control" name='location'>
+                      
+                        {% for i in locations %} 
+                            <option>{{i}}</option>
+                        {% endfor %} 
+                      
+                    </select>
+                </div>
+                <input class="btn btn-primary" type="submit" value="submit">
+            </form>
+        
+            {% if price is defined %}
+            <h1>estimated price = {{ price }} </h1>
+            {% endif %}
+        
+        </main></section>
+          
+    
+  
 
 
 </body>
