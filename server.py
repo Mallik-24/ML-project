@@ -69,4 +69,4 @@ def send():
 
 if __name__ == '__main__':
     load_saved_artifacts()
-    app.run()
+    app.run(debug=True)
